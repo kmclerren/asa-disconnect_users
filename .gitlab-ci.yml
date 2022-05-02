@@ -1,0 +1,22 @@
+image: ansible-znet:latest
+
+before_script:
+  # run ssh-agent
+  - mkdir -p ~/.ssh
+  - eval $(ssh-agent -s)
+  - ssh-add <(echo "$SSH_PRIVATE_KEY")
+  - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+  - export ANSIBLE_CONFIG=./ansible.cfg
+
+stages:
+  - deploy
+
+deploy:
+  stage: deploy
+  retry: 2
+  only:
+  - master
+  script:
+    - ansible-playbook --version
+    - echo $ANSIBLE_VAULT_PASSWORD > .vault_password.txt
+    - ./run-ansible.sh ${USERS}

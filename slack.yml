@@ -1,0 +1,18 @@
+---
+- name: Send slack notice
+  connection: local
+  hosts: localhost
+  vars_files:
+    - enable.yml
+  gather_facts: no
+
+  tasks:
+
+    - name: Sending message to slack channel
+      slack:
+        token: "{{ slack_token }}"
+        channel: "#your_channel"
+        domain: "company.slack.com"
+        parse: "none"
+        msg: "Ansible pipeline asa-disconnect_user ran for: {{ item }}"
+      with_items: "{{ users }}"

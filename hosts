@@ -1,0 +1,11 @@
+[asa_noenable]
+dev-net-asa-001
+
+[asa_enable]
+
+[asa_noenable:vars]
+ansible_network_os=asa
+
+[asa_enable:vars]
+ansible_network_os=asa
+ansible_become_pass='{{ enable_secret }}'

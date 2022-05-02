@@ -1,0 +1,44 @@
+---
+- name: ASA Command Output
+  connection: network_cli
+  hosts: asa_noenable
+  vars_files:
+    - enable.yml
+  gather_facts: no
+  become: no
+
+  tasks:
+
+    - name: "TASK 1: Logoff user"
+      asa_command:
+        commands:
+          - vpn-sessiondb logoff name {{ item }} noconfirm
+      with_items: "{{ users }}"
+      register: output
+
+    - name: "TASK 2: Debug output"
+      debug:
+        msg: "{{ inventory_hostname }} - {{ output.results|map(attribute='stdout_lines')|list }}"
+
+
+- name: ASA Command Output
+  connection: network_cli
+  hosts: asa_enable
+  vars_files:
+    - enable.yml
+  gather_facts: no
+  become_method: enable
+  become: yes
+
+  tasks:
+
+    - name: "TASK 1: Logoff user"
+      asa_command:
+        commands:
+          - vpn-sessiondb logoff name {{ item }} noconfirm
+      with_items: "{{ users }}"
+      register: output
+
+    - name: "TASK 2: Debug output"
+      debug:
+        msg: "{{ output.results|map(attribute='stdout_lines')|list }}"
