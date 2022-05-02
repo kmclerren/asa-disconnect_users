@@ -1,4 +1,4 @@
-image: ansible-znet:latest
+image: ansible-custom:latest
 
 before_script:
   # run ssh-agent
